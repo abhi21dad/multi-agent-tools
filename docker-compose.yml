@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  # Twitter Command Server
+  twitter-server:
+    build: .
+    container_name: langgraph-twitter-server
+    command: python twitter_command_server.py
+    ports:
+      - "5001:5001"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # File System Server
+  file-server:
+    build: .
+    container_name: langgraph-file-server
+    command: python file_command_server1.py
+    ports:
+      - "5002:5002"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    volumes:
+      - ./file_sandbox:/app/file_sandbox
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # Google Drive Server
+  gdrive-server:
+    build: .
+    container_name: langgraph-gdrive-server
+    command: python google_drive_command_server.py
+    ports:
+      - "5003:5003"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    volumes:
+      - ./credentials.json:/app/credentials.json:ro
+      - ./token_drive.json:/app/token_drive.json
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # Gmail Server
+  gmail-server:
+    build: .
+    container_name: langgraph-gmail-server
+    command: python gmail_command_server2.py
+    ports:
+      - "5004:5004"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    volumes:
+      - ./credentials.json:/app/credentials.json:ro
+      - ./token_gmail.json:/app/token_gmail.json
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # Main Chatbot Application
+  chatbot:
+    build: .
+    container_name: langgraph-chatbot
+    command: streamlit run frontend_title.py --server.address 0.0.0.0 --server.port 8501
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - TWITTER_SERVER_URL=http://twitter-server:5001
+      - FILE_SERVER_URL=http://file-server:5002
+      - GDRIVE_SERVER_URL=http://gdrive-server:5003
+      - GMAIL_SERVER_URL=http://gmail-server:5004
+    volumes:
+      - ./chatbot.db:/app/chatbot.db
+      - ./logs:/app/logs
+    depends_on:
+      - twitter-server
+      - file-server
+      - gdrive-server
+      - gmail-server
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  default:
+    name: langgraph-network
+
+volumes:
+  chatbot-db:
+  file-sandbox:
+  logs:

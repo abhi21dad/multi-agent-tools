@@ -1,0 +1,38 @@
+# Development Dependencies for LangGraph Chatbot
+# Install with: pip install -r requirements-dev.txt
+
+# Testing
+pytest>=8.0.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.23.0
+pytest-mock>=3.12.0
+pytest-xdist>=3.5.0  # Parallel test execution
+
+# Code Quality
+black>=24.0.0  # Code formatter
+flake8>=7.0.0  # Linter
+mypy>=1.8.0  # Type checker
+isort>=5.13.0  # Import sorter
+pylint>=3.0.0  # Additional linting
+
+# Security
+bandit>=1.7.6  # Security linter
+safety>=3.0.0  # Dependency vulnerability scanner
+pip-audit>=2.6.0  # Alternative vulnerability scanner
+
+# Documentation
+sphinx>=7.2.0
+sphinx-rtd-theme>=2.0.0
+myst-parser>=2.0.0  # Markdown support for Sphinx
+
+# Development Tools
+pre-commit>=3.6.0  # Git hooks
+ipython>=8.20.0  # Enhanced REPL
+ipdb>=0.13.13  # Debugger
+
+# API Testing
+httpx>=0.26.0  # Async HTTP client for testing
+respx>=0.20.0  # Mock HTTP responses
+
+# Load Testing
+locust>=2.20.0  # Load testing tool

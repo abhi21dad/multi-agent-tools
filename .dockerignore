@@ -1,0 +1,75 @@
+# Ignore everything in the Docker build context by default
+*
+
+# Allow specific files and directories
+!requirements.txt
+!requirements-dev.txt
+!config.py
+!gmail3.py
+!frontend_title.py
+!backened_title.py
+!file_command_server1.py
+!gmail_command_server2.py
+!google_drive_command_server.py
+!twitter_command_server.py
+!filesystem.py
+!twitter.py
+!googledrive.py
+!googledrive1.py
+!gmail.py
+!gmail1.py
+!gmail2.py
+!gmail3.py
+!one_time_gmail_authenticator.py
+!unified_google_authenticator.py
+
+# Allow source directories
+!src/
+!src/**
+
+# Exclude sensitive files
+.env
+.env.local
+credentials.json
+token_*.json
+
+# Exclude development files
+.git
+.gitignore
+.github
+.vscode
+.idea
+*.md
+!README.md
+
+# Exclude test files
+tests/
+test_*.py
+*_test.py
+
+# Exclude unnecessary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Exclude database files (will be volumized)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Exclude logs
+*.log
+logs/
+
+# Exclude virtual environment
+venv/
+env/
+langgragh-chatbot/
